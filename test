@@ -1,12 +1,4 @@
-# -------------- VM  version 1.1 ------------- #
-#                                              #
-# 42 / filler VM Developped by: Hcao - Abanlin #
-#                                              #
-# -------------------------------------------- #
-launched players/superjeannot.filler
-$$$ exec p1 : [players/superjeannot.filler]
-launched players/hcao.filler
-$$$ exec p2 : [players/hcao.filler]
+$$$ exec p1 : [players/hcao.filler]
 Plateau 15 17:
     01234567890123456
 000 .................
