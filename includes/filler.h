@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:37:49 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/14 16:16:53 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/15 17:39:39 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,5 @@ typedef struct	s_data
 	t_grid		*map;
 	t_grid		*piece;
 }				t_data;
-
-
-
 
 #endif
