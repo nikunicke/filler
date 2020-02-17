@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 12:07:50 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/15 19:44:08 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/17 17:47:20 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@
 #include "libft.h"
 
 // FUNC FOR STRUCT
-int			player_num(void)
+int			get_player_id(void)
 {
-	char		*line;
 	static int	num = 0; // not norminettable --> solution: check if num is explicitly one or two and return accordingli....
+	char		*line;
 	int			i;
-
+	
 	if (num)
 		return (num == 1 ? 2 : 1);
 	i = 0;
-	while (ft_get_next_line(1, &line) > 0 && i++ < 2)
+	while (ft_get_next_line(0, &line) > 0 && i++ < 2)
 	{
 		if (ft_strstr(line, "$$$ exec p"))
 		{
@@ -42,24 +42,28 @@ int			player_num(void)
 	return (0);
 }
 
-int			board_size(void)
+int			*board_size(void)
 {
-	char	*line;
-	int		i;
+	int				*xy;
+	int				i;
+	char			*line;
 
+	if (!(xy = malloc(sizeof(int) * 2)))
+		return (NULL);
 	i = 0;
-	while (ft_get_next_line(1, &line) > 0 && i++ < 10)
-	{
+	while (ft_get_next_line(0, &line) > 0 && i++ < 10)
+	{	
 		if (ft_strstr(line, "Plateau"))
 		{
 			i = ft_strcspn(line, "0123456789");
-			i = ft_atoi(&line[i]) * ft_atoi(&line[i + ft_strspn(&line[i], "0123456789")]);
+			xy[0] = ft_atoi(&line[i]);
+			xy[1] = ft_atoi(&line[i + ft_strspn(&line[i], "0123456789")]);
 			ft_strdel(&line);
-			return (i);
+			return (xy);
 		}
 		ft_strdel(&line);
 	}
-	return (0);
+	return (NULL);
 }
 
 t_data		*new_game(t_player *(*new_player)(), t_grid *(*new_grid)())
@@ -68,9 +72,12 @@ t_data		*new_game(t_player *(*new_player)(), t_grid *(*new_grid)())
 
 	if (!(data = malloc(sizeof(t_data))))
 		return (NULL);
-	data->player = new_player();
-	data->opponent = new_player();
-	data->map = new_grid();
+	if (!(data->player = new_player()))
+		return (NULL);
+	if (!(data->opponent = new_player()))
+		return (NULL);
+	if (!(data->map = new_grid()))
+		return (NULL);
 	data->piece = NULL;
 	return (data);
 }
@@ -78,105 +85,130 @@ t_data		*new_game(t_player *(*new_player)(), t_grid *(*new_grid)())
 t_player	*new_player(void)
 {
 	t_player	*player;
-	int			p_num;
+	int			player_id;
 
-	p_num = player_num();
-	if (p_num != 1 && p_num != 2)
+	if (!(player_id = get_player_id()))
+		return (NULL);
+	if (player_id != 1 && player_id != 2)
 		return (NULL);
 	if (!(player = malloc(sizeof(t_player))))
 		return (NULL);
-	player->num = p_num;
+	player->id = player_id;
 	player->points = 0;
+	player->algorithm = NULL;
 	return (player);
 }
 
 t_grid		*new_grid(void)
 {
-	t_grid	*grid;
-	char	*area;
-	int		size;
+	t_grid		*grid;
+	char		*area;
+	int			*dimensions;
+	int			size;
 
-	size = board_size();
+	if (!(dimensions = board_size()))
+		return (NULL);
+	size = dimensions[0] * dimensions[1];
 	if (!(grid = malloc(sizeof(t_grid))))
 		return (NULL);
-	if (!(area = malloc(sizeof(size))))
+	if (!(area = ft_strnew(size)))
 		return (NULL);
-	grid->x = 0;
-	grid->y = 0;
+	grid->x = dimensions[0];
+	grid->y = dimensions[1];
 	grid->area = ft_memset(area, '.', size);
+	free(dimensions);
+	dimensions = NULL;
 	return (grid);
 }
 
-
-
-// NORMAL FUNC
-// void		*get_players(t_data **data)
-// {
-// 	char	*line;
-// 	int		i;
-
-// 	i = 0;
-// 	while (ft_get_next_line(1, &line) > 0 && i++ < 10)
-// 	{
-// 		if (ft_strstr(line, "$$$ exec p"))
-// 		{
-// 			(*data)->player = new_player(ft_atoi(&line[ft_strcspn(line, "12")]));
-// 			ft_strdel(&line);
-// 			break;
-// 		}
-// 		ft_strdel(&line);
-// 	}
-// 	if ((*data)->player == NULL)
-// 		exit (1);
-// 	(*data)->opponent = new_player((*data)->player->num == 1 ? 2 : 1);
-// }
-
 t_data		*setup_game_env(void)
 {
-	char	*line;
-	t_data	*game;
+	t_data	*game_env;
 
-	game = new_game(new_player, new_grid);
-	// get_players(&data);
-	return (game);
+	if (!(game_env = new_game(new_player, new_grid)))
+		return (NULL);
+	return (game_env);
 }
 
-int		main(void)
+void		update_map(t_grid *map)
 {
-	int		index;
 	char	*line;
+	int		i;
+	FILE	*fp;
+
+	fp = fopen("filler.log", "w+");
+	i = 0;
+	while (ft_get_next_line(0, &line) > 0 && i < map->x)
+	{
+		fprintf(fp, "%s\n", line);
+		if (ft_strspn(line, " 	0123456789") > 4)
+		{
+			ft_strdel(&line);
+			continue ;
+		}
+		ft_strncpy(&map->area[i * (map->y - 1)], &line[ft_strspn(line, " \t0123456789")], 17);
+		ft_strdel(&line);
+		i++;
+	}
+	fclose(fp);
+}
+
+// void		update_piece(t_grid *piece)
+// {
+// 	char	*line;
+
+// 	while (ft_get_next_line(0, &line) > 0)
+// 	{
+
+// 	}
+// 	return ;
+// }
+
+int			game_loop(t_data *game_env, void (*algorithm)())
+{	
+	char *line;
+
+	game_env->player->algorithm = algorithm;
+	while (1)
+	{
+		update_map(game_env->map);
+		write(1, "12 14\n", 6);
+	}
+	// while (1)
+	// {
+	// 	update_map(game_env->map);
+	// 	update_piece(game_env->piece);
+	// 	write(1, "12 14\n", 6);
+	// }
+	// while (1)
+	// {
+		// update_piece(game_env->piece);
+		// game_env->player->algorithm(game_env); // or just game_env?
+		// write placement
+	// }
+	// Set algorithm to player
+	// Start game loop
+	// Update map - no reallocation is needed
+	// Get next piece
+	// Call player algorithm
+	// Output desired coordinates
+	return (0);
+}
+
+void		npimenof_dummy(void)
+{
+	printf("12 14\n");
+	return ;
+}
+
+int			main(void)
+{
 	t_data	*data;
 
-	data = setup_game_env();
-	printf("PLAYER: %d\n", data->player->num);
-	printf("OPPENE: %d\n", data->opponent->num);
-	printf("MAP: %s\n", data->map->area);
-	// while (ft_get_next_line(1, &line) > 0)
-	// {
-	// 	printf("%s\n", line);
-	// 	free(line);
-	// 	line = NULL;
-
-	// }
-	// char	*line;
-	// char	*dim;
-	// int		index;
-	// // int		buf_size;
-
-	// dim = NULL;
-	// while (ft_get_next_line(1, &line) > 0)
-	// {
-	// 	if (ft_strstr(line, "Plateau") || ft_strstr(line, "Piece"))
-	// 	{
-	// 		index = ft_strcspn(line, "0123456789");
-	// 		dim = ft_strsub(line, index, ft_strcspn(line + index, ":"));
-	// 		printf("Dimensions: %s\n", dim);
-	// 	}
-	// 	free(dim);
-	// 	free(line);
-	// 	dim = NULL;
-	// 	line = NULL; // Consider fixin ft_del_args for this. Addresses not being set to NULL in this scope
-	// }
+	if (!(data = setup_game_env()))
+		return (1);
+	if ((game_loop(data, PLAYER)))
+		return (1);
 	// system("leaks a.out");
 	return (0);
 }

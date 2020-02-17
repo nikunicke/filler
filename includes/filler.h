@@ -6,17 +6,19 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:37:49 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/15 17:39:39 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/17 14:23:59 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FILLER_H
 # define FILLER_H
+# define PLAYER npimenof_dummy
 
 typedef struct	s_player 
 {
-	int			num;
+	int			id;
 	int			points;
+	void		(*algorithm)();
 }				t_player;
 
 typedef struct	s_grid
