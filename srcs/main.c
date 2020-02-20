@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 12:07:50 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/19 15:37:09 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/20 14:23:22 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int			main(void)
 		return (1);
 	if (game_loop(data, PLAYER))
 		return (1);
-	system("leaks npimenof.filler");
+	// system("leaks npimenof.filler");
 	// close(fd);
 	return (0);
 }
