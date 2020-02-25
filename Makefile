@@ -6,7 +6,7 @@
 #    By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/18 11:47:57 by npimenof          #+#    #+#              #
-#    Updated: 2020/02/18 12:19:18 by npimenof         ###   ########.fr        #
+#    Updated: 2020/02/25 11:44:46 by npimenof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,11 @@ SRCS = srcs/main.c
 UTILS = srcs/utilities/player.c\
 		srcs/utilities/game.c\
 		srcs/utilities/grid.c\
+		srcs/utilities/point.c
 
 PLAYER = srcs/players/npimenof.c
+
+LOGGER = srcs/logging/logger.c
 
 OBJS = main.o\
 		player.o\
@@ -35,16 +38,15 @@ INCL = ./includes
 
 all: $(NAME)
 
-$(NAME): $(SRCS) $(UTILS) $(PLAYER)
+$(NAME): $(SRCS) $(UTILS) $(PLAYER) $(LOGGER)
 	make -C $(LIBFT)
-	gcc $(FLAGS) -o $(NAME) $(SRCS) $(UTILS) $(PLAYER) -L$(LIBFT) -lft -I$(LIBFTINCL) -I$(INCL)
+	gcc $(FLAGS) -o $(NAME) $(SRCS) $(UTILS) $(PLAYER) $(LOGGER) -L$(LIBFT) -lft -I$(LIBFTINCL) -I$(INCL)
 
 clean:
-	rm -f $(OBJS)
 	make clean -C $(LIBFT)
 
 fclean: clean
 	rm -f $(NAME)
-	make flcean $(LIBFT)
+	make fclean -C $(LIBFT)
 
 re: fclean all
