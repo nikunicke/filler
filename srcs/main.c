@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 12:07:50 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/22 19:24:54 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/25 18:56:28 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ int			game_loop(t_data *game, int (*algorithm)())
 			return (1);
 		if (!(game->player->algorithm(game)))
 			return (0);
-		update_area(game->map);
+		update_area(&game->map);
 		ft_strdel(&game->piece->area);
-		free(game->piece);
+		free(game->piece);	
+		game->piece = NULL;
 	}
 	return (0);
 }
@@ -41,12 +42,12 @@ int			main(void)
 {
 	t_data	*data;
 
-	// fd = open("filler.log", O_RDWR);
+	// ft_log("PROGRAM STARTUP\n");
 	if (!(data = setup_game()))
 		return (1);
 	if (game_loop(data, PLAYER))
 		return (1);
-	// system("leaks npimenof.filler");
-	// close(fd);
+	// ft_log("PROGRAM END\n");
+	system("leaks npimenof.filler");
 	return (0);
 }
