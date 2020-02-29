@@ -6,7 +6,7 @@
 #    By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/18 11:47:57 by npimenof          #+#    #+#              #
-#    Updated: 2020/02/25 11:44:46 by npimenof         ###   ########.fr        #
+#    Updated: 2020/02/29 18:36:34 by npimenof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,9 @@ SRCS = srcs/main.c
 UTILS = srcs/utilities/player.c\
 		srcs/utilities/game.c\
 		srcs/utilities/grid.c\
-		srcs/utilities/point.c
+		srcs/utilities/point.c\
+		srcs/utilities/coordinates/player_coordinates.c\
+		srcs/utilities/coordinates/opponent_coordinates.c\
 
 PLAYER = srcs/players/npimenof.c
 
@@ -39,8 +41,9 @@ INCL = ./includes
 all: $(NAME)
 
 $(NAME): $(SRCS) $(UTILS) $(PLAYER) $(LOGGER)
-	make -C $(LIBFT)
-	gcc $(FLAGS) -o $(NAME) $(SRCS) $(UTILS) $(PLAYER) $(LOGGER) -L$(LIBFT) -lft -I$(LIBFTINCL) -I$(INCL)
+		make -C $(LIBFT)
+		gcc  $(FLAGS) -o $(NAME) $(SRCS) $(UTILS) $(PLAYER) $(LOGGER)\
+		-L$(LIBFT) -lft -I$(LIBFTINCL) -I$(INCL)
 
 clean:
 	make clean -C $(LIBFT)

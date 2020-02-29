@@ -1,31 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   game.c                                             :+:      :+:    :+:   */
+/*   ft_lstadd_sorted.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/18 11:41:43 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/28 17:10:18 by npimenof         ###   ########.fr       */
+/*   Created: 2020/02/26 10:48:57 by npimenof          #+#    #+#             */
+/*   Updated: 2020/02/26 10:52:54 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "get_next_line.h"
-#include "filler.h"
 
-t_data		*new_game(t_player *(*new_player)(), t_grid *(*new_grid)())
+void	ft_lstadd_sorted(t_list **head, t_list *new)
 {
-	t_data	*data;
+	t_list	*tmp;
 
-	if (!(data = malloc(sizeof(t_data))))
-		return (NULL);
-	if (!(data->player = new_player()))
-		return (NULL);
-	if (!(data->opponent = new_player()))
-		return (NULL);
-	if (!(data->map = new_grid("Plateau")))
-		return (NULL); 
-	data->piece = NULL;
-	return (data);
+	if (!new)
+		return ;
+	if (!(*head) || (*head)->content > new->content)
+	{
+		new->next = *head;
+		*head = new;
+	}
+	else
+	{
+		tmp = *head;
+		while (tmp->next != NULL && tmp->next->content < new->content)
+			tmp = tmp->next;
+		new->next = tmp->next;
+		tmp->next = new;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 11:34:58 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/19 11:16:10 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/29 17:20:13 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	*grid_size(char *identifier)
 	if (!(xy = malloc(sizeof(int) * 2)))
 		return (NULL);
 	i = 0;
-	while (i++ < 1 && ft_get_next_line(0, &line) > 0)
+	while (i < 1 && ft_get_next_line(fde, &line) > 0)
 	{
 		if (ft_strstr(line, identifier))
 		{
@@ -34,26 +34,27 @@ static int	*grid_size(char *identifier)
 			return (xy);
 		}
 		ft_strdel(&line);
+		i++;
 	}
 	return (NULL);
 }
 
-void	update_area(t_grid *grid)
+void	update_area(t_grid **grid)
 {
 	char	*line;
 	int		i;
 
 	i = 0;
-	while (i < grid->x && ft_get_next_line(0, &line) > 0)
+	while (i < (*grid)->x && ft_get_next_line(fde, &line) > 0 )
 	{
 		if (ft_iswhitespace(*line) || ft_isalpha(*line))
-		{
 			ft_strdel(&line);
-			continue ;
+		else
+		{
+			ft_strncpy(&(*grid)->area[i * ((*grid)->y)], &line[ft_strspn(line, " \t0123456789")], (*grid)->y);
+			ft_strdel(&line);
+			i++;
 		}
-		ft_strncpy(&grid->area[i * (grid->y)], &line[ft_strspn(line, " \t0123456789")], grid->y);
-		ft_strdel(&line);
-		i++;
 	}
 }
 
@@ -72,7 +73,7 @@ t_grid		*new_grid(char *identifier)
 		return (NULL);
 	grid->x = dimensions[0];
 	grid->y = dimensions[1];
-	update_area(grid);
+	update_area(&grid);
 	free(dimensions);
 	dimensions = NULL;
 	return (grid);

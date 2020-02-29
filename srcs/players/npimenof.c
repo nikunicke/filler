@@ -6,143 +6,12 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 11:46:06 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/25 18:58:41 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/29 18:38:46 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
-
-int		offset(char *piece_index, t_data *game)
-{
-	int		offset;
-	int		piece_i;
-	int		piece_y;
-
-	piece_y = game->piece->y;
-	piece_i = piece_index - game->piece->area;
-	offset = game->map->y * (piece_i / piece_y) + (piece_i % piece_y);
-	return (offset);
-}
-
-int		check_row(int crd, int offset, t_data *game)
-{
-	int		map_row;
-	int		limit_high;
-	int		piece_row;
-	piece_row = (ft_strrchr(game->piece->area, '*') - game->piece->area) / game->piece->y;
-	map_row = (crd + offset) / game->map->y;
-	limit_high = (crd / game->map->y) + (piece_row);
-	if (map_row > limit_high)
-		return (1);
-	return (0);
-}
-
-t_list	*coordinates(char *map_index, char *piece_index, t_data *game)
-{
-	int			map_i;
-	char		*copy;
-	t_list		*item;
-	t_point		ref;
-	t_point		*crd;
-	t_point		*map_point;
-	int			boffset;
-
-	item = ft_lstnew(NULL, 0);
-	if ((copy = ft_strchr(piece_index + 1, '*')))
-		item->next = coordinates(map_index, copy, game);
-	map_i = map_index - game->map->area;
-	boffset = offset(piece_index, game);
-	map_point = new_point(map_i / game->map->y, map_i % game->map->y);
-	crd = new_point((map_i / game->map->y) - (offset(piece_index, game) / game->map->y), (map_i % game->map->y) - (offset(piece_index, game) % game->map->y));
-	piece_index = game->piece->area;
-	while ((piece_index = ft_strchr(piece_index, '*')))
-	{
-		ref = set_point(offset(piece_index, game) / game->map->y, offset(piece_index, game) % game->map->y);
-		if (point_addition(crd, &ref).x == map_point->x && point_addition(crd, &ref).y == map_point->y && piece_index++)
-			continue;
-		if (point_addition(crd, &ref).x < 0 || point_addition(crd, &ref).y < 0 || point_addition(crd, &ref).y > game->map->y - 1 ||
-			game->map->area[point_to_index(point_addition(crd, &ref), game->map)] != '.')
-		{
-			free(map_point);
-			free(crd);
-			return (item);
-		}
-		piece_index++;
-	}
-	item->content = new_point((map_i / game->map->y) - (boffset / game->map->y), (map_i % game->map->y) - (boffset % game->map->y));
-	item->content_size = sizeof(t_point); // make this shit shorter
-	free(crd);
-	free(map_point);
-	return (item);
-	// MAKE THIS FUNCTION READABLE ...
-}
-
-t_list	*available_coordinates(t_data *game)
-{
-	char	*map_index;
-	char	*piece_index;
-	t_list	*head;
-	t_list	*tmp;
-
-	head = ft_lstnew(NULL, sizeof(t_list));
-	tmp = head;
-	map_index = game->map->area;
-	piece_index = ft_strchr(game->piece->area, '*');
-	while ((map_index = ft_strchr(map_index, 'X')))
-	{
-		head->next = ft_lstnew((void *)coordinates(map_index, piece_index, game), sizeof(t_list));
-		map_index++;
-		head = head->next;
-	}
-	head = tmp;
-	return (head);
-}
-
-int		traverse_linked_linked_list(t_list *head)
-{
-	t_list	*item;
-	t_point		*a;
-	
-	while (head)
-	{
-		item = (t_list *)head->content;
-		while (item)
-		{
-			if (item->content == NULL)
-			{
-				item = item->next;
-				continue;
-			}
-			a = (t_point *)item->content;
-			ft_log("%d %d\n", a->x, a->y);
-			item = item->next;
-		}
-		head = head->next;
-	}
-	return (1);
-}
-
-void	ft_lstadd_sorted(t_list **head, t_list *new)
-{
-	t_list	*tmp;
-
-	if (!new)
-		return ;
-	if (!(*head) || *(int *)(*head)->content > *(int *)new->content)
-	{
-		new->next = *head;
-		*head = new;
-	}
-	else
-	{
-		tmp = *head;
-		while (tmp->next != NULL && *(int *)tmp->next->content < *(int *)new->content)
-			tmp = tmp->next;
-		new->next = tmp->next;
-		tmp->next = new;
-	}
-}
 
 void	free_nested_list(void *content, size_t content_size)
 {
@@ -164,46 +33,117 @@ void	free_nested_list(void *content, size_t content_size)
 	list = NULL;
 }
 
-void	free_content(void *content, size_t content_size)
+int		get_min_distance(t_list **opponent, t_point *player)
 {
-	free(content);
-	content = NULL;
-	content_size = 0;
+	int		distance;
+	int		min_distance;
+	t_list	*tmp;
+
+	min_distance = point_distance((t_point *)(*opponent)->content, player);
+	tmp = (*opponent)->next;
+	while (tmp)
+	{
+		// ft_log("FAIL HERE\n");
+		distance = point_distance((t_point *)tmp->content, player);
+		if (distance < min_distance)
+		{
+			min_distance = distance;
+			tmp = *opponent;
+		}
+		tmp = tmp->next;
+	}
+	return (min_distance);
 }
 
-void	get_opponent_coordinates(t_list **head, t_data *game)
+int		compare_distance(t_list **opponent, t_point *a, t_point *b)
 {
-	char	*map_i;
-	int		index;
+	static int		i;
+	static t_point	tested;
+	static int		result;
 
-	map_i = game->map->area;
-	while ((map_i = ft_strchr(map_i, 'O')))
+	if (tested.x != a->x && tested.y != a->y)
+		i = 0;
+	if (!i)
 	{
-		index = map_i - game->map->area;
-		ft_lstadd_sorted(head, ft_lstnew(&index, sizeof(int)));
-		ft_log("Opponent crd: %d %d\n", index / game->map->y, index % game->map->y);
-		map_i++;
+		result = get_min_distance(opponent, a);
+		tested.x = a->x;
+		tested.y = a->y;
+		i = 1;
 	}
+	if (get_min_distance(opponent, b) < result)
+		return (1);
+	return (0);
+}
+
+void	lstadd_point_sorted(t_list **head, t_list **opponent, t_list *new)
+{
+	t_list	*tmp1;
+	t_list	*tmp2;
+
+	if (!new)
+		return ;
+	while (new)
+	{
+		tmp2 = new;
+		if (!(*head) || compare_distance(opponent, (*head)->content, new->content))
+		{
+			new = new->next;
+			tmp2->next = *head;
+			*head = tmp2;
+		}
+		else
+		{
+			tmp1 = *head;
+			while (tmp1->next && compare_distance(opponent, tmp1->content, new->content))
+				tmp1 = tmp1->next;
+			new = new->next;
+			tmp2->next = tmp1->next;
+			tmp1->next = tmp2;
+		}
+	}
+}
+
+t_list	*traverse_nested_list(t_list *head, t_list **opponent)
+{
+	t_list	*result;
+	t_list	*item;
+	t_list	*tmp;
+
+	while (head)
+	{
+		item = (t_list *)head->content;
+		lstadd_point_sorted(&result, opponent, item);
+		tmp = head;
+		head = head->next;
+		free(tmp);
+		tmp = NULL;
+	}
+	return (result);
 }
 
 int		npimenof(t_data *game)
 {
 	t_list	*coordinates;
 	t_list	*opponent_coordinates;
-	int		crd;
+	t_list	*sorted;
 
 	opponent_coordinates = NULL;
 	coordinates = available_coordinates(game);
-	crd = traverse_linked_linked_list(coordinates);
 	get_opponent_coordinates(&opponent_coordinates, game);
-	ft_lstdel(&coordinates, free_nested_list);
-	ft_lstdel(&opponent_coordinates, free_content);
-	return (0);
+	sorted = traverse_nested_list(coordinates, &opponent_coordinates);
+	if (sorted)
+	{
+		ft_putnbr_fd(((t_point *)sorted->content)->x, 1);
+		ft_putchar_fd(' ', 1);
+		ft_putnbr_fd(((t_point *)sorted->content)->y, 1);
+		ft_putchar_fd('\n', 1);
+	}
+	else
+	{
+		write(1, "0 0\n", 4);
+		return (0);
+	}
+	ft_lstdel(&sorted, ft_del_lstcontent);
+	ft_lstdel(&opponent_coordinates, ft_del_lstcontent);
+	return (1);
 }
-
-
-// ft_putnbr_fd(a / map->y, 1);
-// ft_putchar_fd(' ', 1);
-// ft_putnbr_fd(a % map->y, 1);
-// ft_putchar_fd('\n', 1);
-// return (1);

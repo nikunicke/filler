@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:37:49 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/25 18:13:08 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/29 18:58:40 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@
 # define FILLER_H
 # define PLAYER npimenof
 
-// int				fde;
+int fde; // remember this
 
 typedef struct	s_player 
 {
 	int			id;
+	char		mark;
 	int			points;
 	int			(*algorithm)();
 }				t_player;
@@ -56,12 +57,15 @@ t_data			*new_game(t_player *(*new_player)(), t_grid *(*new_grid)());
 
 t_point			*new_point(int x, int y);
 t_point			set_point(int x, int y);
-t_point			point_addition(t_point *sum, t_point *point);
-int				point_to_index(t_point point, t_grid *map);
+t_point			point_add(t_point *sum, t_point *point);
+int				point_index(t_point point, t_grid *map);
+int				point_distance(t_point *a, t_point *b);
 
 void			update_area(t_grid **map);
 
 int				npimenof(t_data *game);
+t_list			*available_coordinates(t_data *game);
+void			get_opponent_coordinates(t_list **head, t_data *game);
 
 int				ft_log(char *msg, ...);
 #endif

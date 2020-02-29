@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 11:32:25 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/19 10:54:24 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/29 18:59:57 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	get_player_id(void)
 	if (num)
 		return (num == 1 ? 2 : 1);
 	i = 0;
-	while (ft_get_next_line(0, &line) > 0 && i++ < 1)
+	while (i++ < 1 && ft_get_next_line(fde, &line) > 0)
 	{
 		if (ft_strstr(line, "$$$ exec p"))
 		{
@@ -49,6 +49,10 @@ t_player	*new_player(void)
 	if (!(player = malloc(sizeof(t_player))))
 		return (NULL);
 	player->id = player_id;
+	if (player_id == 1)
+		player->mark = 'O';
+	else
+		player->mark = 'X';
 	player->points = 0;
 	player->algorithm = NULL;
 	return (player);

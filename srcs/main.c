@@ -6,11 +6,12 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 12:07:50 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/25 18:56:28 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/29 18:56:31 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
+#include <fcntl.h>
 
 t_data		*setup_game(void)
 {
@@ -42,12 +43,11 @@ int			main(void)
 {
 	t_data	*data;
 
-	// ft_log("PROGRAM STARTUP\n");
+	fde = 0;
 	if (!(data = setup_game()))
 		return (1);
 	if (game_loop(data, PLAYER))
 		return (1);
-	// ft_log("PROGRAM END\n");
-	system("leaks npimenof.filler");
 	return (0);
 }
+

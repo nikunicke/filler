@@ -6,11 +6,11 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 11:20:29 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/25 18:51:36 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/02/29 18:37:29 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+// #include "libft.h"
 #include "filler.h"
 
 t_point		*new_point(int x, int y)
@@ -33,7 +33,7 @@ t_point		set_point(int x, int y)
 	return (point);
 }
 
-int			point_to_index(t_point point, t_grid *map)
+int			point_index(t_point point, t_grid *map)
 {
 	int		index;
 
@@ -41,7 +41,15 @@ int			point_to_index(t_point point, t_grid *map)
 	return (index);
 }
 
-t_point		point_addition(t_point *a, t_point *b)
+int			point_distance(t_point *a, t_point *b)
+{
+	int		distance;
+	
+	distance = ft_pow(a->x - b->x) + ft_pow(a->y - b->y);
+	return (distance);
+}
+
+t_point		point_add(t_point *a, t_point *b)
 {
 	static t_point	sum;
 	
