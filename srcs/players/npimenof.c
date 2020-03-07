@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 11:46:06 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/29 18:38:46 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/07 20:12:26 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int		get_min_distance(t_list **opponent, t_point *player)
 	tmp = (*opponent)->next;
 	while (tmp)
 	{
-		// ft_log("FAIL HERE\n");
 		distance = point_distance((t_point *)tmp->content, player);
 		if (distance < min_distance)
 		{

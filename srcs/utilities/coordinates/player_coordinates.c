@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 09:30:50 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/29 19:00:35 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/02 09:39:22 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int		put_piece(char *piece, t_point *map, t_point *crd, t_data *game)
 			sum.y == map->y && piece++)
 			continue;
 		if (sum.x < 0 || sum.y < 0 ||
-			sum.y > game->map->y - 1 ||
+			sum.y > game->map->y - 1 || sum.x > game->map->x - 1 ||
 			game->map->area[point_index(sum, game->map)] != '.')
 		{
 			free(map);
