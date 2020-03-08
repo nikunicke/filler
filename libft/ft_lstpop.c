@@ -1,31 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   game.c                                             :+:      :+:    :+:   */
+/*   ft_lstpop.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/18 11:41:43 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/08 13:55:05 by npimenof         ###   ########.fr       */
+/*   Created: 2020/03/08 13:32:29 by npimenof          #+#    #+#             */
+/*   Updated: 2020/03/08 13:32:53 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "get_next_line.h"
-#include "filler.h"
 
-t_data		*new_game(t_player *(*new_player)(), t_grid *(*new_grid)())
+void	ft_lstpop(t_list **head)
 {
-	t_data	*data;
+	t_list	*tmp;
 
-	if (!(data = malloc(sizeof(t_data))))
-		return (NULL);
-	if (!(data->player = new_player()))
-		return (NULL);
-	if (!(data->opponent = new_player()))
-		return (NULL);
-	if (!(data->map = new_grid("Plateau")))
-		return (NULL);
-	data->piece = NULL;
-	return (data);
+	tmp = *head;
+	*head = tmp->next;
+	ft_lstdelone(&tmp, ft_del_lstcontent);
 }

@@ -6,32 +6,12 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 11:46:06 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/07 20:12:26 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/08 13:46:36 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
-
-void	free_nested_list(void *content, size_t content_size)
-{
-	t_list	*list;
-	t_list	*tmp;
-
-	list = (t_list *)content;
-	while (list)
-	{
-		tmp = list;
-		list = list->next;
-		free(tmp->content);
-		tmp->content = NULL;
-		tmp->content_size = content_size;
-		free(tmp);
-		tmp = NULL;
-	}
-	free(list);
-	list = NULL;
-}
 
 int		get_min_distance(t_list **opponent, t_point *player)
 {
@@ -79,12 +59,11 @@ void	lstadd_point_sorted(t_list **head, t_list **opponent, t_list *new)
 	t_list	*tmp1;
 	t_list	*tmp2;
 
-	if (!new)
-		return ;
 	while (new)
 	{
 		tmp2 = new;
-		if (!(*head) || compare_distance(opponent, (*head)->content, new->content))
+		if (!(*head) ||
+			compare_distance(opponent, (*head)->content, new->content))
 		{
 			new = new->next;
 			tmp2->next = *head;
@@ -93,7 +72,8 @@ void	lstadd_point_sorted(t_list **head, t_list **opponent, t_list *new)
 		else
 		{
 			tmp1 = *head;
-			while (tmp1->next && compare_distance(opponent, tmp1->content, new->content))
+			while (tmp1->next &&
+					!compare_distance(opponent, tmp1->content, new->content))
 				tmp1 = tmp1->next;
 			new = new->next;
 			tmp2->next = tmp1->next;

@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/15 17:21:39 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/29 19:31:03 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/08 13:42:37 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ char				*ft_creplace(char *str, char *replace, char new_c);
 char				*ft_cnreplace(char *str, char *nreplace, char new_c);
 char				**ft_strsplit(char const *s, char c);
 size_t				ft_strlen(const char *s);
+size_t				ft_lstlen(t_list *lst);
 size_t				ft_strlcat(char *dst, const char *src, size_t dstsize);
 size_t				ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t				ft_strspn(const char *s1, const char *s2);
@@ -102,6 +103,8 @@ void				ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 void				ft_lstadd(t_list **alst, t_list *new);
 void				ft_lstadd_sorted(t_list **head, t_list *new);
+void				ft_lstrev(t_list **head);
+void				ft_lstpop(t_list **head);
 void				ft_del_lstcontent(void *content, size_t content_size);
 void				ft_del_args(int count, ...);
 

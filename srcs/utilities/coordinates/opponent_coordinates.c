@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 09:41:10 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/07 19:15:11 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/08 13:59:45 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,81 +20,38 @@ int		orientation(t_point p, t_point q, t_point r)
 	return (val);
 }
 
-void	ft_lstpop(t_list **head)
+void	find_hull(t_list **hull, t_list *points, size_t min_l)
 {
-	t_list	*tmp;
-
-	tmp = *head;
-	*head = tmp->next;
-	// ft_lstdelone(&tmp, ft_del_lstcontent);
-}
-
-int		ft_lstlen(t_list *lst)
-{
-	t_list	*tmp;
-	size_t	i;
-
-	tmp = lst;
-	i = 0;
-	while (tmp && ++i)
+	while (points)
 	{
-		tmp = tmp->next;
+		while (ft_lstlen(*hull) >= min_l &&
+				orientation(*(t_point *)points->content,
+							*(t_point *)(*hull)->content,
+							*(t_point *)(*hull)->next->content) <= 0)
+			ft_lstpop(hull);
+		ft_lstadd(hull, ft_lstnew(points->content, sizeof(points->content)));
+		points = points->next;
 	}
-	return (i);
-}
-
-void	ft_lstrev(t_list **head)
-{
-	t_list	*current;
-	t_list	*nxt;
-	t_list	*prev;
-
-	nxt = NULL;
-	prev = NULL;
-	current = *head;
-	while (current)
-	{
-		nxt = current->next;
-		current->next = prev;
-		prev = current;
-		current = nxt;
-	}
-	*head = prev;
 }
 
 t_list	*grahams_scan(t_list *points)
 {
 	static t_list	*hull;
 	t_list			*tmp1;
-	t_list			*tmp2;
-	// int				i;
-	int				len1;
+	size_t			len1;
 
 	if ((len1 = ft_lstlen(points)) < 4)
-		return NULL;
+		return (NULL);
 	hull = NULL;
 	tmp1 = points;
 	ft_lstadd(&hull, ft_lstnew(tmp1->content, sizeof(tmp1->content)));
 	ft_lstadd(&hull, ft_lstnew(tmp1->next->content, sizeof(tmp1->content)));
 	tmp1 = points->next->next;
-	while (tmp1)
-	{
-		tmp2 = tmp1;
-		while (ft_lstlen(hull) >= 2 && orientation(*(t_point *)tmp1->content, *(t_point *)hull->content, *(t_point *)hull->next->content) <= 0)
-			ft_lstpop(&hull);
-		ft_lstadd(&hull, ft_lstnew(tmp1->content, sizeof(tmp1->content)));
-		tmp1 = tmp1->next;
-	}
+	find_hull(&hull, tmp1, len1);
 	ft_lstrev(&points);
 	len1 = ft_lstlen(hull);
 	tmp1 = points->next->next;
-	while (tmp1->next)
-	{
-		while (ft_lstlen(hull) >= len1 && orientation(*(t_point *)tmp1->content, *(t_point *)hull->content, *(t_point *)hull->next->content) <= 0)
-			ft_lstpop(&hull);
-		ft_lstadd(&hull, ft_lstnew(tmp1->content, sizeof(tmp1->content)));
-		tmp1 = tmp1->next;
-	}
+	find_hull(&hull, tmp1, len1);
 	return (hull);
 }
 

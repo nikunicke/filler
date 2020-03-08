@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 11:34:58 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/29 17:20:13 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/08 13:59:17 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,20 @@ static int	*grid_size(char *identifier)
 	return (NULL);
 }
 
-void	update_area(t_grid **grid)
+void		update_area(t_grid **grid)
 {
 	char	*line;
 	int		i;
 
 	i = 0;
-	while (i < (*grid)->x && ft_get_next_line(fde, &line) > 0 )
+	while (i < (*grid)->x && ft_get_next_line(fde, &line) > 0)
 	{
 		if (ft_iswhitespace(*line) || ft_isalpha(*line))
 			ft_strdel(&line);
 		else
 		{
-			ft_strncpy(&(*grid)->area[i * ((*grid)->y)], &line[ft_strspn(line, " \t0123456789")], (*grid)->y);
+			ft_strncpy(&(*grid)->area[i * ((*grid)->y)],
+						&line[ft_strspn(line, " \t0123456789")], (*grid)->y);
 			ft_strdel(&line);
 			i++;
 		}

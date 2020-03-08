@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/12 12:07:50 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/02 09:34:44 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/08 13:55:56 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@ t_data		*setup_game(void)
 }
 
 int			game_loop(t_data *game, int (*algorithm)())
-{	
+{
 	game->player->algorithm = algorithm;
 	while (1)
 	{
-		if(!(game->piece = new_grid("Piece")))
+		if (!(game->piece = new_grid("Piece")))
 			return (1);
 		if (!(game->player->algorithm(game)))
 			return (0);
 		update_area(&game->map);
 		ft_strdel(&game->piece->area);
-		free(game->piece);	
+		free(game->piece);
 		game->piece = NULL;
 	}
 	return (0);
@@ -48,7 +48,5 @@ int			main(void)
 		return (1);
 	if (game_loop(data, PLAYER))
 		return (1);
-	// system("leaks npimenof.filler");
 	return (0);
 }
-

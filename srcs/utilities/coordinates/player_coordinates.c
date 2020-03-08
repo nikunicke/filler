@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 09:30:50 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/02 09:39:22 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/08 13:53:42 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,8 @@ t_list			*available_coordinates(t_data *game)
 	piece = ft_strchr(game->piece->area, '*');
 	while ((map = ft_strchr(map, game->player->mark)))
 	{
-		// head->next = ft_lstnew(coordinates(map, piece, game), sizeof(t_list));
 		head->next = ft_lstnew(NULL, 0);
-		head->next->content = coordinates(map, piece, game);
-		head->next->content_size = sizeof(t_list);
-		if (((t_list *)head->next)->content == NULL)
+		if (!(head->next->content = coordinates(map, piece, game)))
 		{
 			free(head->next);
 			head->next = NULL;
@@ -119,8 +116,6 @@ t_list			*available_coordinates(t_data *game)
 		head = head->next;
 		map++;
 	}
-	head = tmp->next;
-	free(tmp);
-	tmp = NULL;
+	head = tmp;
 	return (head);
 }

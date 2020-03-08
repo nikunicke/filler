@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 11:32:25 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/29 18:59:57 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/08 13:57:39 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 
 static int	get_player_id(void)
 {
-	static int	num = 0; // not norminettable --> solution: check if num is explicitly one or two and return accordingli....
+	static int	num;
 	char		*line;
 	int			i;
-	
+
 	if (num)
 		return (num == 1 ? 2 : 1);
 	i = 0;
@@ -35,7 +35,6 @@ static int	get_player_id(void)
 	}
 	return (0);
 }
-
 
 t_player	*new_player(void)
 {

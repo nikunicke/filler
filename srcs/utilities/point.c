@@ -6,11 +6,10 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 11:20:29 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/29 18:37:29 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/08 13:56:53 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "libft.h"
 #include "filler.h"
 
 t_point		*new_point(int x, int y)
@@ -44,7 +43,7 @@ int			point_index(t_point point, t_grid *map)
 int			point_distance(t_point *a, t_point *b)
 {
 	int		distance;
-	
+
 	distance = ft_pow(a->x - b->x) + ft_pow(a->y - b->y);
 	return (distance);
 }
@@ -52,7 +51,7 @@ int			point_distance(t_point *a, t_point *b)
 t_point		point_add(t_point *a, t_point *b)
 {
 	static t_point	sum;
-	
+
 	sum.x = a->x + b->x;
 	sum.y = a->y + b->y;
 	return (sum);

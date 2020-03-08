@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   game.c                                             :+:      :+:    :+:   */
+/*   ft_lstlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/18 11:41:43 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/08 13:55:05 by npimenof         ###   ########.fr       */
+/*   Created: 2020/03/08 13:29:51 by npimenof          #+#    #+#             */
+/*   Updated: 2020/03/08 13:30:12 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "get_next_line.h"
-#include "filler.h"
 
-t_data		*new_game(t_player *(*new_player)(), t_grid *(*new_grid)())
+size_t	ft_lstlen(t_list *lst)
 {
-	t_data	*data;
+	t_list	*tmp;
+	size_t	i;
 
-	if (!(data = malloc(sizeof(t_data))))
-		return (NULL);
-	if (!(data->player = new_player()))
-		return (NULL);
-	if (!(data->opponent = new_player()))
-		return (NULL);
-	if (!(data->map = new_grid("Plateau")))
-		return (NULL);
-	data->piece = NULL;
-	return (data);
+	tmp = lst;
+	i = 0;
+	while (tmp && ++i)
+		tmp = tmp->next;
+	return (i);
 }

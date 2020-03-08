@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   game.c                                             :+:      :+:    :+:   */
+/*   logger.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/18 11:41:43 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/08 13:55:05 by npimenof         ###   ########.fr       */
+/*   Created: 2020/02/24 12:28:55 by npimenof          #+#    #+#             */
+/*   Updated: 2020/02/24 13:12:45 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "get_next_line.h"
 #include "filler.h"
+#include <stdarg.h>
+#include <stdio.h>
 
-t_data		*new_game(t_player *(*new_player)(), t_grid *(*new_grid)())
+int		ft_log(char *msg, ...)
 {
-	t_data	*data;
+	int			ret;
+	va_list		args;
+	FILE		*fp;
 
-	if (!(data = malloc(sizeof(t_data))))
-		return (NULL);
-	if (!(data->player = new_player()))
-		return (NULL);
-	if (!(data->opponent = new_player()))
-		return (NULL);
-	if (!(data->map = new_grid("Plateau")))
-		return (NULL);
-	data->piece = NULL;
-	return (data);
+	fp = fopen("filler.log", "a+");
+	va_start(args, msg);
+	ret = vfprintf(fp, msg, args);
+	va_end(args);
+	fclose(fp);
+	return (ret);
 }
