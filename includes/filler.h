@@ -6,19 +6,16 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:37:49 by npimenof          #+#    #+#             */
-/*   Updated: 2020/02/29 18:58:40 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/11 16:39:13 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FILLER_H
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
 # include "libft.h"
 # include "get_next_line.h"
 # define FILLER_H
 # define PLAYER npimenof
+# define POINT(list) (t_point *)list->content
 
 int fde; // remember this
 
@@ -65,7 +62,9 @@ void			update_area(t_grid **map);
 
 int				npimenof(t_data *game);
 t_list			*available_coordinates(t_data *game);
-void			get_opponent_coordinates(t_list **head, t_data *game);
+void			get_opponent_coordinates1(t_list **head, t_data *game);
+void			get_opponent_coordinates2(t_list **head, t_data *game);
 
 int				ft_log(char *msg, ...);
+
 #endif
