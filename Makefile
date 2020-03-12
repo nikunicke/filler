@@ -6,7 +6,7 @@
 #    By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/18 11:47:57 by npimenof          #+#    #+#              #
-#    Updated: 2020/02/29 18:36:34 by npimenof         ###   ########.fr        #
+#    Updated: 2020/03/08 16:55:40 by npimenof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ all: $(NAME)
 
 $(NAME): $(SRCS) $(UTILS) $(PLAYER) $(LOGGER)
 		make -C $(LIBFT)
-		gcc  $(FLAGS) -o $(NAME) $(SRCS) $(UTILS) $(PLAYER) $(LOGGER)\
+		gcc $(FLAGS) -o $(NAME) $(SRCS) $(UTILS) $(PLAYER) $(LOGGER)\
 		-L$(LIBFT) -lft -I$(LIBFTINCL) -I$(INCL)
 
 clean:
