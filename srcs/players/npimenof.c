@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 11:46:06 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/08 13:46:36 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/03/11 19:03:13 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int		get_min_distance(t_list **opponent, t_point *player)
 	int		min_distance;
 	t_list	*tmp;
 
+	if (!*opponent)
+		return (1);
 	min_distance = point_distance((t_point *)(*opponent)->content, player);
 	tmp = (*opponent)->next;
 	while (tmp)
@@ -73,7 +75,7 @@ void	lstadd_point_sorted(t_list **head, t_list **opponent, t_list *new)
 		{
 			tmp1 = *head;
 			while (tmp1->next &&
-					!compare_distance(opponent, tmp1->content, new->content))
+					compare_distance(opponent, tmp1->content, new->content))
 				tmp1 = tmp1->next;
 			new = new->next;
 			tmp2->next = tmp1->next;
@@ -88,6 +90,7 @@ t_list	*traverse_nested_list(t_list *head, t_list **opponent)
 	t_list	*item;
 	t_list	*tmp;
 
+	result = NULL;
 	while (head)
 	{
 		item = (t_list *)head->content;
@@ -97,7 +100,79 @@ t_list	*traverse_nested_list(t_list *head, t_list **opponent)
 		free(tmp);
 		tmp = NULL;
 	}
+	if (!result)
+		return (head);
 	return (result);
+}
+
+int		map_indx(t_point *p, t_grid *map)
+{
+	return (p->x * map->y + p->y);
+}
+
+int		check_point(t_point *p, t_grid *map)
+{
+	int		dist;
+	int		i;
+	int		j;
+	int		count;
+	t_point	ref;
+
+	if (map->x > 20)
+		dist = 3;
+	else
+		dist = 1;
+	i = dist;
+	ref.x = ft_ignore_neg(p->x - (dist / 2));
+	count = 0;
+	while (ref.x < map->x && i--)
+	{
+		ref.y = ft_ignore_neg(p->y - (dist / 2));
+		j = dist;
+		while (ref.y < map->y && j--)
+		{
+			if (map->area[map_indx(&ref, map)] == '.')
+				count++;
+			ref.y++;
+		}
+		ref.x++;
+	}
+	if (count > 1)
+		return (0);
+	return (1);
+}
+
+int		check_oppo_c(t_list **opponent, t_grid *map)
+{
+	t_list	*current;
+	t_list	*prev;
+	t_list	*nxt;
+	t_point	*data;
+
+	prev = NULL;
+	nxt = NULL;
+	current = *opponent;
+	while (current)
+	{
+		data = POINT(current);
+		if (check_point(data, map) && !prev)
+		{
+			*opponent = (*opponent)->next;
+			current = *opponent;
+			prev = NULL;
+		}
+		else if (check_point(data, map))
+		{
+			prev->next = current->next;
+			current = current->next;
+		}
+		else
+		{
+			prev = current;
+			current = current->next;
+		}		
+	}
+	return (1);
 }
 
 int		npimenof(t_data *game)
@@ -108,7 +183,10 @@ int		npimenof(t_data *game)
 
 	opponent_coordinates = NULL;
 	coordinates = available_coordinates(game);
-	get_opponent_coordinates(&opponent_coordinates, game);
+	get_opponent_coordinates1(&opponent_coordinates, game);
+	check_oppo_c(&opponent_coordinates, game->map);
+	// if (!opponent_coordinates)
+	// 	get_opponent_coordinates2(&opponent_coordinates, game);
 	sorted = traverse_nested_list(coordinates, &opponent_coordinates);
 	if (sorted)
 	{
