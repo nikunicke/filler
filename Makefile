@@ -6,7 +6,7 @@
 #    By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/18 11:47:57 by npimenof          #+#    #+#              #
-#    Updated: 2020/03/08 16:55:40 by npimenof         ###   ########.fr        #
+#    Updated: 2020/09/09 12:59:40 by npimenof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ UTILS = srcs/utilities/player.c\
 		srcs/utilities/coordinates/player_coordinates.c\
 		srcs/utilities/coordinates/opponent_coordinates.c\
 
-PLAYER = srcs/players/npimenof.c
+PLAYER = srcs/players/npimenof.c\
+		 srcs/players/destroyer_of_worlds.c\
 
 LOGGER = srcs/logging/logger.c
 
@@ -32,6 +33,7 @@ OBJS = main.o\
 		game.o\
 		grid.o\
 		npimenof.o\
+		destroyer_of_worlds.o\
 
 LIBFT = ./libft
 LIBFTINCL = ./libft/includes
