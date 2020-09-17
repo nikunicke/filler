@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/18 11:46:06 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/11 19:03:13 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/09/08 16:29:31 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,9 @@ int		check_point(t_point *p, t_grid *map)
 	t_point	ref;
 
 	if (map->x > 20)
-		dist = 3;
+		dist = 6;
 	else
-		dist = 1;
+		dist = 3;
 	i = dist;
 	ref.x = ft_ignore_neg(p->x - (dist / 2));
 	count = 0;
@@ -170,7 +170,7 @@ int		check_oppo_c(t_list **opponent, t_grid *map)
 		{
 			prev = current;
 			current = current->next;
-		}		
+		}
 	}
 	return (1);
 }
@@ -181,12 +181,9 @@ int		npimenof(t_data *game)
 	t_list	*opponent_coordinates;
 	t_list	*sorted;
 
-	opponent_coordinates = NULL;
 	coordinates = available_coordinates(game);
-	get_opponent_coordinates1(&opponent_coordinates, game);
+	opponent_coordinates = opponent_coords(game);
 	check_oppo_c(&opponent_coordinates, game->map);
-	// if (!opponent_coordinates)
-	// 	get_opponent_coordinates2(&opponent_coordinates, game);
 	sorted = traverse_nested_list(coordinates, &opponent_coordinates);
 	if (sorted)
 	{

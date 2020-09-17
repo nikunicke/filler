@@ -6,7 +6,7 @@
 #    By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/18 11:47:57 by npimenof          #+#    #+#              #
-#    Updated: 2020/09/09 12:59:40 by npimenof         ###   ########.fr        #
+#    Updated: 2020/09/17 16:26:26 by npimenof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,7 @@ INCL = ./includes
 
 all: $(NAME)
 
-$(NAME): $(SRCS) $(UTILS) $(PLAYER) $(LOGGER)
+$(NAME): $(SRCS) $(UTILS) $(PLAYER) $(LOGGER) $(INCL)/filler.h
 		make -C $(LIBFT)
 		gcc $(FLAGS) -o $(NAME) $(SRCS) $(UTILS) $(PLAYER) $(LOGGER)\
 		-L$(LIBFT) -lft -I$(LIBFTINCL) -I$(INCL)

@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 13:37:49 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/11 16:39:13 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/09/17 16:26:34 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 # include "libft.h"
 # include "get_next_line.h"
 # define FILLER_H
-# define PLAYER npimenof
-# define POINT(list) (t_point *)list->content
+# define PLAYER destroyer_of_worlds
+# define POINT(list) ((t_point *)list->content)
+# define EMBEDDED(list) ((t_list *)list->content)
 
 int fde; // remember this
 
@@ -61,9 +62,10 @@ int				point_distance(t_point *a, t_point *b);
 void			update_area(t_grid **map);
 
 int				npimenof(t_data *game);
+int				destroyer_of_worlds(t_data *game);
 t_list			*available_coordinates(t_data *game);
-void			get_opponent_coordinates1(t_list **head, t_data *game);
-void			get_opponent_coordinates2(t_list **head, t_data *game);
+t_list			*opponent_coords(t_data *game);
+t_list			*opponent_coords2(t_data *game);
 
 int				ft_log(char *msg, ...);
 

@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 16:13:35 by npimenof          #+#    #+#             */
-/*   Updated: 2020/09/15 14:52:23 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/09/17 18:08:24 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,58 +14,77 @@
 #include "filler.h"
 
 #define MAP(game) game->map->area
-#define N(point) point.x - 1, point.y
-#define NE(point) point.x - 1, point.y + 1
-#define E(point) point.x, point.y + 1
-#define SE(point) point.x + 1, point.y + 1
-#define S(point) point.x + 1, point.y
-#define SW(point) point.x + 1, point.y - 1
-#define W(point) point.x, point.y - 1
-#define NW(point) point.x - 1, point.y - 1
 
-int		to_index(int x, int y, int w)
+#define NORTH 1
+// #define NORTHE 2
+#define EAST 2
+// #define SOUTHE 4
+#define SOUTH 3
+// #define SOUTHW 6
+#define WEST 4
+// #define NORTHW 8
+
+
+int		to_index(t_point p, int w)
 {
-	// ft_log("to_index: %d\n", x * y + y);
-	return ((x * w) + y);
+	return ((p.x * w) + p.y);
 }
 
-t_point	index_to_coords(int index, t_data *game) {
+t_point	index_to_coords(int index, t_grid *map) {
 	t_point point;
 
-	point.x = index / game->map->y;
-	point.y = index % game->map->y;
+	point.x = index / map->y;
+	point.y = index % map->y;
 	return (point);
 }
 
-int		check_coord(int x, int y, t_data *game)
+
+
+int		check_coord(t_point p, t_grid *map)
 {
-	if (x < 0 ||
-		y < 0 ||
-		x >= game->map->x ||
-		y >= game->map->y)
+	if (p.x < 0 ||
+		p.y < 0 ||
+		p.x >= map->x ||
+		p.y >= map->y)
 		return (0);
 	return (1);
 }
 
-void	check_around(t_point p, int *heatmap, double heat, t_data *game)
+t_point compass(int direction, t_point p)
 {
-	// ft_log("heat: %lf\n", heat);
-	if (check_coord(N(p), game) && heatmap[to_index(N(p), game->map->y)] > (int)heat)
-		heatmap[to_index(p.x, p.y, game->map->y)] = (int)heat;
-	if (check_coord(NE(p), game) && heatmap[to_index(NE(p), game->map->y)] > (int)heat)
-		heatmap[to_index(p.x, p.y, game->map->y)] = (int)heat;
-	if (check_coord(E(p), game) && heatmap[to_index(E(p), game->map->y)] > (int)heat)
-		heatmap[to_index(p.x, p.y, game->map->y)] = (int)heat;
-	if (check_coord(SE(p), game) && heatmap[to_index(SE(p), game->map->y)] > (int)heat)
-		heatmap[to_index(p.x, p.y, game->map->y)] = (int)heat;
-	if (check_coord(S(p), game) && heatmap[to_index(S(p), game->map->y)] > (int)heat)
-		heatmap[to_index(p.x, p.y, game->map->y)] = (int)heat;
-	if (check_coord(SW(p), game) && heatmap[to_index(SW(p), game->map->y)] > (int)heat)
-		heatmap[to_index(p.x, p.y, game->map->y)] = (int)heat;
-	if (check_coord(W(p), game) && heatmap[to_index(W(p), game->map->y)] > (int)heat)
-		heatmap[to_index(p.x, p.y, game->map->y)] = (int)heat;
-	if (check_coord(NW(p), game) && heatmap[to_index(NW(p), game->map->y)] > (int)heat)
-		heatmap[to_index(p.x, p.y, game->map->y)] = (int)heat;
+	if (direction == NORTH)
+		return ((t_point){p.x + 1, p.y});
+	// if (direction == NORTHE)
+	// 	return ((t_point){p.x + 1, p.y + 1});
+	if (direction == EAST)
+		return ((t_point){p.x, p.y + 1});
+	// if (direction == SOUTHE)
+	// 	return ((t_point){p.x - 1, p.y + 1});
+	if (direction == SOUTH)
+		return ((t_point){p.x - 1, p.y});
+	// if (direction == SOUTHW)
+	// 	return ((t_point){p.x - 1, p.y - 1});
+	if (direction == WEST)
+		return ((t_point){p.x, p.y - 1});
+	// if (direction == NORTHW)
+	// 	return ((t_point){p.x + 1, p.y - 1});
+	return (p);
+}
+
+int		check_around(t_point p, int *heatmap, double heat, t_grid *map)
+{
+	int		i;
+	t_point r;
+
+	i = WEST + 1;
+	while (--i)
+	{
+		r = compass(i, p);
+		if (check_coord(r, map) &&
+			heatmap[to_index(r, map->y)] > (int)heat)
+			return (1);
+	}
+	return (0);
 }
 
 void	set_heat(t_data *game, int *heatmap, double heat) {
@@ -78,12 +97,9 @@ void	set_heat(t_data *game, int *heatmap, double heat) {
 	i = -1;
 	while (++i < (max_y * max_x))
 	{
-		// heatmap[i] = check_around(index_to_coords(i, game), heatmap, heat, game) ? (int)heat : heatmap[i];
-		if ((int)heat > heatmap[i])
-		{
-			check_around(index_to_coords(i, game), heatmap, heat, game);
-				// heatmap[i] = (int)heat;
-		}
+		if ((int)heat > heatmap[i] &&
+			check_around(index_to_coords(i, game->map), heatmap, heat, game->map))
+				heatmap[i] = heat;
 	}
 }
 
@@ -101,10 +117,7 @@ int		*create_heatmap(t_data *game)
 	ft_bzero(heatmap, size);
 	ptr = game->map->area;
 	while ((ptr = ft_strchr(ptr, game->opponent->mark)))
-	{
-		// ft_log("asd: %d\n", ptr - MAP(game));
 		heatmap[ptr++ - MAP(game)] = 15000;
-	}
 	heat = 10000;
 	i = -1;
 	while (++i < (game->map->x + game->map->y) && (heat /= 1.1))
@@ -112,22 +125,82 @@ int		*create_heatmap(t_data *game)
 	return (heatmap);
 }
 
+int		get_value(int *heatmap, t_point point, t_data *game)
+{
+	char	*ptr;
+	t_point	p;
+	int		value;
+
+	value = 0;
+	ptr = game->piece->area;
+	// ft_log("%s\n", ptr);
+	while ((ptr = ft_strchr(ptr, '*')))
+	{
+		p = index_to_coords(ptr - game->piece->area, game->piece);
+		p.x += point.x;
+		p.y += point.y;
+		// ft_log("index: %d\n", index);
+		value += heatmap[to_index(p, game->map->y)];
+		ptr++;
+	}
+	// ft_log("value: %d\n", value);
+	return (value);
+}
+
+t_point *most_valuable_point(t_data *game, int *heatmap)
+{
+	t_point *result;
+	t_list	*coords;
+	t_list	*p;
+	int		value;
+	int		max;
+
+	result = NULL;
+	coords = available_coordinates(game);
+	max = 0;
+	while (coords->next)
+	{
+		p = coords->next->content;
+		while (p)
+		{
+			value = get_value(heatmap, *POINT(p), game);
+			if (value > max)
+			{
+				max = value;
+				result = POINT(p);
+			}
+			p = p->next;
+		}
+		coords = coords->next;
+	}
+	return (result);
+}
+
 t_point	*best_option(t_data *game)
 {
 	int		*heatmap;
-	int		x;
-	int		i;
+	t_point *result;
 
 	heatmap = create_heatmap(game);
-	i = 0;
-	while (i < game->map->x * game->map->y)
-	{
-		x = 0;
-		while (x++ < game->map->y && i < game->map->x * game->map->y)
-			ft_log("%d\t", heatmap[i++]);
-		ft_log("\n");
-	}
-	return (NULL);
+	result = most_valuable_point(game, heatmap);
+	// int		i;
+	// int		x;
+	// i = 0;
+	// while (i < game->map->x * game->map->y)
+	// {
+	// 	x = 0;
+	// 	while (x < game->map->y && i < game->map->x * game->map->y)
+	// 	{
+	// 		ft_log("%d\t", heatmap[i]);
+	// 		x++;
+	// 		i++;
+	// 	}
+	// 	ft_log("\n");
+	// }
+	// ft_log("\n\n");
+	// free(heatmap);
+	// heatmap = NULL;
+	return (result);
 }
 
 int		write_coords(t_point *point)
@@ -154,12 +227,14 @@ int		destroyer_of_worlds(t_data *game)
 	t_list	*coords;
 	t_list	*enemy_coords;
 	t_point *result;
+	int		n;
 
 	result = NULL;
 	coords = available_coordinates(game);
 	enemy_coords = opponent_coords(game);
 	result = best_option(game);
-	// ft_lstdel(&coords, ft_del_lstcontent);
-	// ft_lstdel(&enemy_coords, ft_del_lstcontent);
-	return (write_coords(result));
+	n = write_coords(result);
+	ft_lstdel(&coords, ft_del_lstcontent);
+	ft_lstdel(&enemy_coords, ft_del_lstcontent);
+	return (n);
 }

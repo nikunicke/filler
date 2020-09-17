@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 09:41:10 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/11 17:14:10 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/09/08 16:28:04 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,54 +57,45 @@ t_list	*grahams_scan(t_list *points)
 	return (hull);
 }
 
-void	get_opponent_coordinates1(t_list **head, t_data *game)
+t_list	*opponent_coords(t_data *game)
 {
 	char	*map_i;
 	t_list	*convex_hull;
+	t_list	*head;
 	int		index;
 	t_point	point;
 
+	head = NULL;
 	map_i = game->map->area;
 	while ((map_i = ft_strchr(map_i, game->opponent->mark)))
 	{
 		index = map_i - game->map->area;
 		point.x = index / game->map->y;
 		point.y = index % game->map->y;
-		ft_lstadd_sorted(head, ft_lstnew(&point, sizeof(t_point)));
+		ft_lstadd_sorted(&head, ft_lstnew(&point, sizeof(t_point)));
 		map_i++;
 	}
-	if ((convex_hull = grahams_scan(*head)))
-		*head = convex_hull;
-
-
-	// point = *(t_point *)convex_hull->content;
-	// 	index = point.x * game->map->x + point.y;
-	// 	if (game->map->area[index + 1] != '.' &&
-	// 		game->map->area[index - 1] != '.' &&
-	// 		game->map->area[index + game->map->y] != '.' &&
-	// 		game->map->area[index - game->map->y] != '.')
-	// 		{
-	// 			convex_hull = convex_hull->next;
-	// 			free(tmp->content);
-	// 			free(tmp);
-	// 		}
-	// tmp = convex_hull;
+	if ((convex_hull = grahams_scan(head)))
+		head = convex_hull;
+	return (head);
 }
 
-void	get_opponent_coordinates2(t_list **head, t_data *game)
+t_list	*opponent_coors2(t_data *game)
 {
 	char	*map_i;
-	// t_list	*convex_hull;
 	int		index;
 	t_point	point;
+	t_list	*head;
 
+	head = NULL;
 	map_i = game->map->area;
 	while ((map_i = ft_strchr(map_i, game->opponent->mark)))
 	{
 		index = map_i - game->map->area;
 		point.x = index / game->map->y;
 		point.y = index % game->map->y;
-		ft_lstadd_sorted(head, ft_lstnew(&point, sizeof(t_point)));
+		ft_lstadd_sorted(&head, ft_lstnew(&point, sizeof(t_point)));
 		map_i++;
 	}
+	return (head);
 }
