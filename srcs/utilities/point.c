@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 11:20:29 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/08 13:56:53 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/09/18 14:04:23 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,36 +23,33 @@ t_point		*new_point(int x, int y)
 	return (point);
 }
 
-t_point		set_point(int x, int y)
+t_point		i_to_point(int index, t_grid *map)
 {
-	static t_point	point;
+	t_point point;
 
-	point.x = x;
-	point.y = y;
+	point.x = index / map->y;
+	point.y = index % map->y;
 	return (point);
 }
 
-int			point_index(t_point point, t_grid *map)
+int			to_index(t_point p, int w)
 {
-	int		index;
-
-	index = (point.x * map->y) + point.y;
-	return (index);
+	return ((p.x * w) + p.y);
 }
 
-int			point_distance(t_point *a, t_point *b)
+int			write_point(t_point *point)
 {
-	int		distance;
-
-	distance = ft_pow(a->x - b->x) + ft_pow(a->y - b->y);
-	return (distance);
-}
-
-t_point		point_add(t_point *a, t_point *b)
-{
-	static t_point	sum;
-
-	sum.x = a->x + b->x;
-	sum.y = a->y + b->y;
-	return (sum);
+	if (point)
+	{
+		ft_putnbr_fd(point->x, 1);
+		ft_putchar_fd(' ', 1);
+		ft_putnbr_fd(point->y, 1);
+		ft_putchar_fd('\n', 1);
+	}
+	else
+	{
+		write(1, "0 0\n", 4);
+		return (0);
+	}
+	return (1);
 }

@@ -6,7 +6,7 @@
 #    By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/18 11:47:57 by npimenof          #+#    #+#              #
-#    Updated: 2020/09/17 16:26:26 by npimenof         ###   ########.fr        #
+#    Updated: 2020/09/18 13:52:56 by npimenof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ UTILS = srcs/utilities/player.c\
 		srcs/utilities/game.c\
 		srcs/utilities/grid.c\
 		srcs/utilities/point.c\
+		srcs/utilities/heatmap.c\
 		srcs/utilities/coordinates/player_coordinates.c\
 		srcs/utilities/coordinates/opponent_coordinates.c\
 

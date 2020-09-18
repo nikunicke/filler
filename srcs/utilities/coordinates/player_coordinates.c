@@ -6,7 +6,7 @@
 /*   By: npimenof <npimenof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 09:30:50 by npimenof          #+#    #+#             */
-/*   Updated: 2020/03/08 13:53:42 by npimenof         ###   ########.fr       */
+/*   Updated: 2020/09/18 15:11:06 by npimenof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ static int		put_piece(char *piece, t_point *map, t_point *crd, t_data *game)
 	while ((piece = ft_strchr(piece, '*')))
 	{
 		boffset = offset(piece, game);
-		ref = set_point(boffset / game->map->y, boffset % game->map->y);
-		sum = point_add(crd, &ref);
+		ref = (t_point){boffset / game->map->y, boffset % game->map->y};
+		sum = (t_point){crd->x + ref.x, crd->y + ref.y};
 		if (sum.x == map->x &&
 			sum.y == map->y && piece++)
 			continue;
 		if (sum.x < 0 || sum.y < 0 ||
 			sum.y > game->map->y - 1 || sum.x > game->map->x - 1 ||
-			game->map->area[point_index(sum, game->map)] != '.')
+			game->map->area[to_index(sum, game->map->y)] != '.')
 		{
 			free(map);
 			free(crd);
